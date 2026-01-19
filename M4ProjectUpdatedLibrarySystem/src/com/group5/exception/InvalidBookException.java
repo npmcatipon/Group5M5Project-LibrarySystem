@@ -6,6 +6,10 @@ public class InvalidBookException extends Exception {
 		super(message);
 	}
 
+	public InvalidBookException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
 
 
 }
