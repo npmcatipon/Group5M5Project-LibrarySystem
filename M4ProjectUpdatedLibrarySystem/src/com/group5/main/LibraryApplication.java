@@ -133,13 +133,18 @@ public class LibraryApplication {
 	            	//[4] Borrow Book
 	            	displayLibraryMenu();
 	            	System.out.println(Constants.strDISPLAY_SELECTED_OPTION4);
+	            	logger.info("User {} selected option [4] Borrow Book", user.getName());
+	            	
 	            	rowCount = libraryService.displayAvailableBooks();
+	            	
 	            	if (rowCount > 0) {
 		            	String bookIdChoice = askBookChoice(input);
 		            	if (bookIdChoice != "") {
+		            		logger.info("User {} searched for Book ID: {}", user.getName(), bookIdChoice);
 		            		//book found, ask user to input loan ID
 		            		String createdLoanId = askLoanId(input);
 		            		if (createdLoanId != "") {
+		            			logger.info("User {} generated Loan ID: {}", user.getName(), createdLoanId);
 			            		libraryService.borrowBook(createdLoanId, user, bookIdChoice);
 		            		}
 		            	}
@@ -275,6 +280,7 @@ public class LibraryApplication {
     			
         		if (tempInput.equalsIgnoreCase("X")) {
 	        		bookFound = true;
+	        		logger.info("User {}, inputted X in Book ID choice. Going back to main menu.", user.getName());
 	        		break;
 
         		} else {
@@ -285,6 +291,7 @@ public class LibraryApplication {
 	            		if (libraryService.isBookBorrowed(tempInput)) {
 	        				//currently borrowed
 	        				System.out.print (Constants.strERROR_BOOK_OUT);
+	        				logger.warn("Book ID: {} is currently borrowed.", tempInput);
 	        				bookFound = false;
 	        			} else {
 			        		ret = tempInput;
@@ -293,6 +300,7 @@ public class LibraryApplication {
 	        			}
 	        		} else {
 	        			System.out.print (Constants.strERROR_BOOK_NOT_FOUND);
+	        			logger.error("Book ID: not found.", tempInput);
 	        		}
 	        	}
     		}
@@ -315,6 +323,7 @@ public class LibraryApplication {
     		if (tempInput != null) {
 	        	if (tempInput.equalsIgnoreCase("X")) {
 	        		loanSearch = true;
+	        		logger.warn("User {} inputted X in Loan ID. Going back to main menu.", user.getName());
 	        		break;
 	        	} else {
 	        		loanSearch = libraryService.findLoan(tempInput);
@@ -661,7 +670,7 @@ public class LibraryApplication {
     			System.out.print (Constants.strERROR_INVALID_INPUT);
     			
     			// Added logger warn for null or empty input
-    			logger.warn(Constants.strERROR_INVALID_INPUT+" Input cannot be null or empty");
+    			logger.warn("{} Input cannot be null or empty.", Constants.strERROR_INVALID_INPUT);
         	} else {
     			//valid input
     			ret = tempInput;

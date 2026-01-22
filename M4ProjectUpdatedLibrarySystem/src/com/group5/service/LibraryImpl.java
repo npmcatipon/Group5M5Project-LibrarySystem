@@ -83,7 +83,6 @@ public class LibraryImpl implements LibraryService {
 
 	@Override
 	public int displayAvailableBooks() {
-		// TODO Auto-generated method stub
     	System.out.println(Constants.strDISPLAY_AVAILABLE_BOOKS );
 
 		//print table header
@@ -157,7 +156,6 @@ public class LibraryImpl implements LibraryService {
 
 	@Override
 	public Library borrowBook(String loanId, User user, String bookIdChoice) {
-		// TODO Auto-generated method stub
 		System.out.println(Constants.strPROCESSLOADING);
 
 		for (int j = 0 ; j < bookList.size(); j++) {
@@ -173,7 +171,8 @@ public class LibraryImpl implements LibraryService {
 				bookList.set(j, book);
 				loanList.add(newLoan);
 
-				System.out.println(" You have successfully loaned the book entitled " + book.getTitle());
+				System.out.printf(" User %s have successfully loaned the book: %s ", user.getName(), book.getTitle());
+				logger.info("User {} successfully loaned the Book: {} with Loan ID: {}.", user.getName(), book.getTitle(), newLoan.getLoanId());
 
 				break;
 			}
@@ -188,7 +187,6 @@ public class LibraryImpl implements LibraryService {
 
 	@Override
 	public boolean findBook(String input) {
-		// TODO Auto-generated method stub
 		boolean isFound = false;
 		for (Book book : bookList) {
 			if (book.getId().equalsIgnoreCase(input)) {
@@ -202,7 +200,6 @@ public class LibraryImpl implements LibraryService {
 
 	@Override
 	public boolean isBookBorrowed(String bookId) {
-		// TODO Auto-generated method stub
 		boolean isBorrowed = false;
 		for (Book book : bookList) {
 			if (book.getId().equalsIgnoreCase(bookId)) {
