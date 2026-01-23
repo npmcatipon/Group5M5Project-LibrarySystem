@@ -217,6 +217,7 @@ public class LibraryApplication {
 	            case '8':
 	            	//[8] Update Book
 	                System.out.println(Constants.strDISPLAY_SELECTED_OPTION8);
+	                logger.info("User {} selected option [8] Update Book", user.getName());
 	            	rowCount = libraryService.displayAllBooks();
 	            	if (rowCount > 0) {
 	            		String bookIdChoice = askBookChoice(input);
@@ -225,6 +226,9 @@ public class LibraryApplication {
 		            		Book updatedBook = askUpdatedBook(input, bookIdChoice);
 		            		if (updatedBook != null) {
 			            		libraryService.updateBook(updatedBook);
+			            		logger.info("User {} updated the Book ID: {} to {}.", user.getName(),
+			            				bookIdChoice,
+			            				updatedBook.getTitle());
 		            		}
 		            	}
 	            	}
@@ -289,6 +293,7 @@ public class LibraryApplication {
 
         		} else {
 	            	bookFound = libraryService.findBook(tempInput);
+	            	logger.info("User {} search Book ID: {}", user.getName(), tempInput);
 
 	            	if (bookFound) {
 	        			//check if currently loaned
@@ -559,7 +564,6 @@ public class LibraryApplication {
 		//input book Title
         isInputValid = false;
 		prompt = Constants.strPROMPT_ENTER_BOOKTITLE ;
-		
 		do {
 			tempInput = validateInput(input, prompt);
 
@@ -567,6 +571,7 @@ public class LibraryApplication {
 				
 				if (tempInput.equalsIgnoreCase("X")) {
 	        		isInputValid = true;
+	        		logger.info("User {}, inputted X in Book Title. Going back to main menu.", user.getName());
 	        		break;
 				} else {
 					bookTitle = tempInput;
@@ -589,6 +594,7 @@ public class LibraryApplication {
 	        	if (tempInput != null) {
 					if (tempInput.equalsIgnoreCase("X")) {
 		        		isInputValid = true;
+		        		logger.info("User {}, inputted X in Book Author. Going back to main menu.", user.getName());
 		        		break;
 					} else {
 						bookAuthor = tempInput;
@@ -599,12 +605,8 @@ public class LibraryApplication {
 	        } while (!isInputValid);
 		}
 
-        //update Book 
-        if ((bookTitle !=null && bookAuthor != null)) {
-        	if (!(bookTitle.equalsIgnoreCase("X") || bookAuthor.equalsIgnoreCase("X"))) {
-                book = new Book(bookId, bookTitle, bookAuthor, false);
-        	}
-        }
+		book = new Book(bookId, bookTitle, bookAuthor, false);
+		
 		return book;
 	}
 	
@@ -621,7 +623,6 @@ public class LibraryApplication {
     		if (tempInput != null) {
     			isInputValid = true;
     			user.setId(tempInput);
-    			logger.info("User {} has logged in.", user.getName());
     		}
     	} while (!isInputValid);
     	
@@ -638,6 +639,7 @@ public class LibraryApplication {
         		} else {
         			isInputValid = true;
         			user.setName(tempInput);
+        			logger.info("User {} has logged in.", user.getName());
         		}
     		}
     	} while (!isInputValid);

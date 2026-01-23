@@ -298,7 +298,7 @@ public class LibraryImpl implements LibraryService {
 			Book book = bookList.get(j);
 			if (book.getId().equalsIgnoreCase(updatedBook.getId())) {
 				bookList.set(j, updatedBook);
-				System.out.println(" You have successfully updated the book with ID " + updatedBook.getId());
+				System.out.printf(" You have successfully updated Book ID: %s ", updatedBook.getId());
 				break;
 			}
 		}
