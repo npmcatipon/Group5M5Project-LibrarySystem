@@ -14,8 +14,7 @@ public class LibraryImpl implements LibraryService {
 	
 	private static final Logger logger =  LoggerFactory.getLogger(LibraryImpl.class);
 
-	//TODO change back to 5
-	private static final int initialbookcnt = 1;
+	private static final int initialbookcnt = 5;
 
 	private static List<Book> bookList;
 	private static List<Loan> loanList;
@@ -32,7 +31,6 @@ public class LibraryImpl implements LibraryService {
 
 	@Override
 	public Library initializeList() {
-		// TODO Auto-generated method stub
 		bookList = new ArrayList<>();
 		Book book = null;
 
@@ -60,7 +58,6 @@ public class LibraryImpl implements LibraryService {
 
 	@Override
 	public int displayAllBooks () {
-		// TODO Auto-generated method stub
     	System.out.println(Constants.strDISPLAY_ALL_BOOKS );
 
 		//print table header
@@ -136,7 +133,6 @@ public class LibraryImpl implements LibraryService {
 
 	@Override
 	public int displayAllLoans() {
-		// TODO Auto-generated method stub
     	System.out.println(Constants.strDISPLAY_BORROWED_BOOKS );
 
 		//print table header
@@ -216,7 +212,6 @@ public class LibraryImpl implements LibraryService {
 
 	@Override
 	public boolean findLoan(String input) {
-		// TODO Auto-generated method stub
 		boolean isFound = false;
 		for (Loan loan : loanList) {
 			if (loan.getLoanId().equalsIgnoreCase(input)) {
@@ -229,7 +224,6 @@ public class LibraryImpl implements LibraryService {
 
 	@Override
 	public Library returnBook(String loanChoice) {
-		// TODO Auto-generated method stub
 		System.out.println(Constants.strPROCESSLOADING );
 		for (int i = 0 ; i < loanList.size(); i++) {
 			Loan loan = loanList.get(i);
@@ -269,7 +263,6 @@ public class LibraryImpl implements LibraryService {
 
 	@Override
 	public Library deleteBook(String bookfordeletion) {
-		// TODO Auto-generated method stub
 		System.out.println(Constants.strPROCESSLOADING );
 		for (int j = 0 ; j < bookList.size(); j++) {
 			Book book = bookList.get(j);
@@ -300,7 +293,6 @@ public class LibraryImpl implements LibraryService {
 
 	@Override
 	public Library updateBook(Book updatedBook) {
-		// TODO Auto-generated method stub
 		System.out.println(Constants.strPROCESSLOADING );
 		for (int j = 0 ; j < bookList.size(); j++) {
 			Book book = bookList.get(j);

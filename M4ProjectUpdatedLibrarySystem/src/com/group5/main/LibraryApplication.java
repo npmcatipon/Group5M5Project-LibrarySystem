@@ -102,6 +102,7 @@ public class LibraryApplication {
 	            case '1':
 	            	//[1] Display All Books
 	            	System.out.println(Constants.strDISPLAY_SELECTED_OPTION1);
+	            	logger.info("User {} selected option [1] Display Available Books", user.getName());
 	            	libraryService.displayAllBooks();
 	            	//exit to menu
 	            	displayLibraryMenu();
@@ -112,7 +113,9 @@ public class LibraryApplication {
 	            case '2':
 	            	//[2] Display Available Books
 	            	System.out.println(Constants.strDISPLAY_SELECTED_OPTION2);
+	            	logger.info("User {} selected option [2] Display Available Books", user.getName());
 	            	libraryService.displayAvailableBooks();
+	            	
 	            	//exit to menu
 	            	displayLibraryMenu();
 	            	askMenuChoice();
