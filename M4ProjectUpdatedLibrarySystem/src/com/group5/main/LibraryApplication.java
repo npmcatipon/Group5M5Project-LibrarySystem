@@ -200,12 +200,14 @@ public class LibraryApplication {
 	            case '7':
 	            	//[7] Remove Book
 	                System.out.println(Constants.strDISPLAY_SELECTED_OPTION7);
+	                logger.info("User {} selected option [7] Remove Book", user.getName());
 	            	rowCount = libraryService.displayAllBooks();
 	            	if (rowCount > 0) {
 		            	String bookIdChoice = askBookChoiceForRemoval(input);
 		            	if (bookIdChoice != "") {
 		            		//book found, delete book
 		            		libraryService.deleteBook(bookIdChoice);
+		            		logger.info("User {} successfully removed book with book ID: {}", user.getName(), bookIdChoice);
 		            	}
 	            	} 
 	            	//exit to menu
@@ -531,6 +533,8 @@ public class LibraryApplication {
     		if (tempInput != null) {
     			
         		if (tempInput.equalsIgnoreCase("X")) {
+        			// Added logger for book id input to be removed and user inputted x
+        			logger.info("User {} inputted character to be returned to main menu: {}", user.getName(), tempInput);
 	        		bookFound = true;
 	        		break;
 
@@ -538,11 +542,15 @@ public class LibraryApplication {
 	            	bookFound = libraryService.findBook(tempInput);
 
 	            	if (bookFound) {
+	            		// Added logger for book id input to be removed and book is found
+	            		logger.info("User {} inputted Book ID: {} to be removed. Book is found", user.getName(), tempInput);
 		        		ret = tempInput;
 		        		bookFound = true;
 		        		break;
 	        		} else {
 	        			System.out.print (Constants.strERROR_BOOK_NOT_FOUND);
+	        			// Added logger for book id input to be removed and book is not found
+	        			logger.info("User {} inputted Book ID: {} to be removed. Book is not found", user.getName(), tempInput);
 	        		}
 	        	}
     		}
