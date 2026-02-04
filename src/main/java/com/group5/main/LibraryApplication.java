@@ -55,6 +55,7 @@ import com.group5.dao.impl.BookDAOImpl;
 import com.group5.dao.impl.UserDAOImpl;
 import com.group5.exception.InvalidBookException;
 import com.group5.exception.InvalidUserException;
+import com.group5.exception.UserCancelException;
 
 
 public class LibraryApplication {
@@ -185,34 +186,64 @@ public class LibraryApplication {
 	                
 	            case '6':
 	            	//[6] Add Book
-	            	System.out.println(Constants.strPROMPT_ENTER_BOOKTITLE);
-	            	String title = input.nextLine();
 	            	
-	            	try {
+	            	String title = null;
+	            	String author = null;
+	            	
+	            	logger.info("User {} selected option [6] Add Book", user.getName());
+	            	
+	            	do {
 	            		
-	            		if (title.trim().isEmpty() || title == null) {
-	            			logger.error("Book title is empty.");
-	            			throw new InvalidBookException("Book title cannot be empty or null.");
-	            		}
+	            		try {
+		            		
+		            		title = validateTitle(input);
+		            		author = validateAuthor(input);
+		            		
+		            		System.out.println("book add.");
+//		            		bookService.addBook(title, author);
+		            	
+		            	} catch (InvalidBookException e) {
+		            		
+		            		System.out.println(e.getMessage());
+		            		continue;
+		            		
+		            	} catch (UserCancelException e) {
+		            		
+		            		System.out.println(e.getMessage());
+		            		break;
+						}
 	            		
-	            	} catch (InvalidBookException e) {
-	            		System.out.println(e.getMessage());
-	            	}
-	            	
-	            	System.out.println(Constants.strPROMPT_ENTER_BOOKAUTHOR);
-	            	String author = input.nextLine();
-	            	
-	            	try {
+	            		break;
 	            		
-	            		if (author.isEmpty() || author == null) {
-	            			logger.error("Book Author is empty.");
-	            			throw new InvalidBookException("Book author cannot be empty or null.");
-	            		}
-	            	} catch (InvalidBookException e) {
-	            		System.out.println(e.getMessage());
-	            	}
+	            	} while (true);
 	            	
-	            	bookService.addBook(title, author);
+	            	
+	            	
+//	            	try {
+//	            		
+//	            		if (title.trim().isEmpty() || title == null) {
+//	            			logger.error("Book title is empty.");
+//	            			throw new InvalidBookException("Book title cannot be empty or null.");
+//	            		}
+//	            		
+//	            	} catch (InvalidBookException e) {
+//	            		System.out.println(e.getMessage());
+//	            	}
+//	            	
+//	            	System.out.println(Constants.strPROMPT_ENTER_BOOKAUTHOR);
+//	            	String author = input.nextLine();
+//	            	
+//	            	try {
+//	            		
+//	            		if (author.isEmpty() || author == null) {
+//	            			logger.error("Book Author is empty.");
+//	            			throw new InvalidBookException("Book author cannot be empty or null.");
+//	            		}
+//	            	} catch (InvalidBookException e) {
+//	            		System.out.println(e.getMessage());
+//	            	}
+	            	
+	            	
 	            	
 	            	displayLibraryMenu();
 	            	askMenuChoice();
@@ -283,6 +314,49 @@ public class LibraryApplication {
 	}
 	
 	
+	private String validateAuthor(Scanner input) throws InvalidBookException, UserCancelException {
+		
+		do {
+			
+			System.out.println(Constants.strPROMPT_ENTER_BOOKAUTHOR);
+			String author = input.nextLine();
+			
+			if (author.trim().isEmpty() || author == null) {
+				logger.warn("Author cannot be null.");
+				throw new InvalidBookException("Author cannot be null");
+			}
+			
+			if (author.equalsIgnoreCase("x")) {
+				logger.warn("User {} selected x. Going back to main menu.", user.getName());
+				throw new UserCancelException("Going back to main menu.");
+			}
+			
+			return author;
+			
+		} while (true);
+	}
+
+	private String validateTitle(Scanner input) throws InvalidBookException, UserCancelException {
+		
+		do {
+			
+			System.out.println(Constants.strPROMPT_ENTER_BOOKTITLE);
+	    	String title = input.nextLine();
+	    	logger.warn("Title cannot be null.");
+			if (title.trim().isEmpty() || title == null) {
+				throw new InvalidBookException("Title cannot be null or empty");
+			}
+			
+			if (title.equalsIgnoreCase("x")) {
+				logger.warn("User {} selected x. Going back to main menu.", user.getName());
+				throw new UserCancelException("Going back to main menu.");
+			}
+			
+			return title;
+			
+		} while (true);
+	}
+
 	private void validateUserLogin(Scanner input) {
 		
 		boolean login = false;
