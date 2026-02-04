@@ -187,17 +187,14 @@ public class LibraryApplication {
 	            case '6':
 	            	//[6] Add Book
 	            	
-	            	String title = null;
-	            	String author = null;
-	            	
 	            	logger.info("User {} selected option [6] Add Book", user.getName());
 	            	
 	            	do {
 	            		
 	            		try {
 		            		
-		            		title = validateTitle(input);
-		            		author = validateAuthor(input);
+		            		String title = validateTitle(input);
+		            		String author = validateAuthor(input);
 		            		
 		            		System.out.println("book add.");
 //		            		bookService.addBook(title, author);
@@ -323,12 +320,12 @@ public class LibraryApplication {
 			
 			if (author.trim().isEmpty() || author == null) {
 				logger.warn("Author cannot be null.");
-				throw new InvalidBookException("Author cannot be null");
+				throw new InvalidBookException(Constants.strERROR_NULL_AUTHOR);
 			}
 			
 			if (author.equalsIgnoreCase("x")) {
 				logger.warn("User {} selected x. Going back to main menu.", user.getName());
-				throw new UserCancelException("Going back to main menu.");
+				throw new UserCancelException(Constants.strERROR_MAIN_MENU);
 			}
 			
 			return author;
@@ -351,7 +348,7 @@ public class LibraryApplication {
 			
 			if (title.equalsIgnoreCase("x")) {
 				logger.warn("User {} selected x. Going back to main menu.", user.getName());
-				throw new UserCancelException("Going back to main menu.");
+				throw new UserCancelException(Constants.strERROR_MAIN_MENU);
 			}
 			
 			return title;
