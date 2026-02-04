@@ -33,5 +33,9 @@ public class BookServiceImpl implements BookService {
 	public void addBook(String title, String author) {
 		bookDAO.addBook(title, author);
 	}
+	
+	public Book findById(String bookId) {
+		return bookDAO.findById(bookId);
+	}
 
 }

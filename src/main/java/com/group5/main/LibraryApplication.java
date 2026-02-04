@@ -37,6 +37,7 @@
 
 package com.group5.main;
 
+import java.util.List;
 import java.util.Scanner;
 //Added import for Logger and LoggerFactory 01.19.2026
 import org.slf4j.Logger;
@@ -53,6 +54,7 @@ import com.group5.service.impl.UserServiceImpl;
 import com.group5.constants.Constants;
 import com.group5.dao.impl.BookDAOImpl;
 import com.group5.dao.impl.UserDAOImpl;
+import com.group5.exception.BookNotFoundException;
 import com.group5.exception.InvalidBookException;
 import com.group5.exception.InvalidUserException;
 import com.group5.exception.UserCancelException;
@@ -102,9 +104,7 @@ public class LibraryApplication {
 	            	System.out.println(Constants.strDISPLAY_SELECTED_OPTION1);
 	            	logger.info("User {} selected option [1] Display All Books", user.getName());
 	            	
-	            	for (Book b: bookService.getAllBooks()) {
-	            		System.out.printf("%s | %s | %s%n", b.getId(), b.getTitle(), b.getAuthor());
-	            	}
+	            	displayBooks(bookService.getAllBooks());
 	            	
 	            	displayLibraryMenu();
 	            	askMenuChoice();
@@ -115,9 +115,7 @@ public class LibraryApplication {
 	            	System.out.println(Constants.strDISPLAY_SELECTED_OPTION2);
 	            	logger.info("User {} selected option [2] Display Available Books", user.getName());
 	            	
-	            	for (Book b: bookService.getAvailableBooks()) {
-	            		System.out.printf("%s | %s | %s%n", b.getId(), b.getTitle(), b.getAuthor());
-	            	}
+	            	displayBooks(bookService.getAvailableBooks());
 	            	
 	            	displayLibraryMenu();
 	            	askMenuChoice();
@@ -129,9 +127,7 @@ public class LibraryApplication {
 	            	System.out.println(Constants.strDISPLAY_SELECTED_OPTION3);
 	            	logger.info("User {} selected option [3] Display Borrowed Books", user.getName());
 
-	            	for (Book b: bookService.getBorrowedBooks()) {
-	            		System.out.printf("%s | %s | %s | %b%n", b.getId(), b.getTitle(), b.getAuthor());
-	            	}
+	            	displayBooks(bookService.getBorrowedBooks());
 	            	
 	            	displayLibraryMenu();
 	            	askMenuChoice();
@@ -140,23 +136,44 @@ public class LibraryApplication {
 	                
 	            case '4':
 	            	//[4] Borrow Book
+	            	//TODO: revise code
 	            	displayLibraryMenu();
 	            	System.out.println(Constants.strDISPLAY_SELECTED_OPTION4);
 	            	logger.info("User {} selected option [4] Borrow Book", user.getName());
 	            	
-	            	rowCount = libraryService.displayAvailableBooks();
-	            	
-	            	if (rowCount > 0) {
-		            	String bookIdChoice = askBookChoice(input);
-		            	if (bookIdChoice != "") {
-		            		//book found, ask user to input loan ID
-		            		String createdLoanId = askLoanId(input);
-		            		if (createdLoanId != "") {
-		            			logger.info("User {} generated Loan ID: {}", user.getName(), createdLoanId);
-			            		libraryService.borrowBook(createdLoanId, user, bookIdChoice);
-		            		}
-		            	}
+	            	System.out.println("List of available books.");
+	            	for (Book b: bookService.getAvailableBooks()) {
+	            		System.out.printf("%s | %s | %s%n", b.getId(), b.getTitle(), b.getAuthor());
 	            	}
+	            	
+	            	System.out.println(Constants.strPROMPT_ENTER_BOOKID);
+	            	String bookId = input.nextLine();
+	            	
+	            	Book findBookId = bookService.findById(bookId);
+
+	            	try {
+	            		if (findBookId == null) {
+	            			throw new BookNotFoundException("Book ID not found.");
+	            		}
+	            	} catch (BookNotFoundException e) {
+	            		System.out.println(e.getMessage());
+	            	}
+	            	
+//	            	
+//	            	
+//	            	rowCount = libraryService.displayAvailableBooks();
+//	            	
+//	            	if (rowCount > 0) {
+//		            	String bookIdChoice = askBookChoice(input);
+//		            	if (bookIdChoice != "") {
+//		            		//book found, ask user to input loan ID
+//		            		String createdLoanId = askLoanId(input);
+//		            		if (createdLoanId != "") {
+//		            			logger.info("User {} generated Loan ID: {}", user.getName(), createdLoanId);
+//			            		libraryService.borrowBook(createdLoanId, user, bookIdChoice);
+//		            		}
+//		            	}
+//	            	}
             		//exit to menu
 	            	displayLibraryMenu();
 	            	askMenuChoice();
@@ -282,6 +299,13 @@ public class LibraryApplication {
 	}
 	
 	
+	private void displayBooks(List<Book> books) {
+		System.out.println("List of all books.");
+    	for (Book b: books) {
+    		System.out.printf("%s | %s | %s%n", b.getId(), b.getTitle(), b.getAuthor());
+    	}		
+	}
+
 	private String validateAuthor(Scanner input) throws InvalidBookException, UserCancelException {
 		
 		do {

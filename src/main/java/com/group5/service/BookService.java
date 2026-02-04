@@ -10,4 +10,5 @@ public interface BookService {
 	List<Book> getAvailableBooks();
 	List<Book> getBorrowedBooks();
 	void addBook(String title, String author);
+	Book findById(String bookId);
 }

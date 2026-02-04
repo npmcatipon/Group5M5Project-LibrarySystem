@@ -31,6 +31,9 @@ public class BookDAOImpl implements BookDAO {
 	private final String ADD_BOOK = 
 			"INSERT INTO book(title, author) values(?,?)";
 	
+	private final String FIND_BOOK_ID =
+			"SELECT id, title, author, isBorrowed FROM book WHERE id = ? AND isBorrowed = false ORDER BY id";
+	
 	@Override
 	public List<Book> getAllBooks()  {
 		
@@ -120,5 +123,32 @@ public class BookDAOImpl implements BookDAO {
 		} catch (SQLException e) {
 			System.out.println("Encountered error on adding a book." + e);
 		}
+	}
+
+	@Override
+	public Book findById(String bookId) {
+		
+		Book book = new Book();
+		
+		try (Connection conn = DBUtil.getConnection();
+				PreparedStatement ps = conn.prepareStatement(FIND_BOOK_ID)) {
+			
+			ps.setLong(1, Long.valueOf(bookId));
+			ResultSet rs = ps.executeQuery();
+			
+			if (rs.next()) {
+				book.setId(String.valueOf(rs.getLong("id")));
+				book.setTitle(rs.getString("title"));
+				book.setAuthor(rs.getString("author"));
+				book.setIsBorrowed(rs.getBoolean("isBorrowed"));
+				return book;
+			}
+			
+			return null;
+			
+		} catch (SQLException e) {
+			System.out.println("Encountered error on database connection. " + e);
+		}
+		return book;
 	}
 }
