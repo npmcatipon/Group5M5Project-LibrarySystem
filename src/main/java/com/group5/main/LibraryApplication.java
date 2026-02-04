@@ -48,13 +48,17 @@ import com.group5.model.Book;
 import com.group5.service.BookService;
 import com.group5.service.LibraryImpl;
 import com.group5.service.LibraryService;
+import com.group5.service.LoanService;
 import com.group5.service.UserService;
 import com.group5.service.impl.BookServiceImpl;
+import com.group5.service.impl.LoanServiceImpl;
 import com.group5.service.impl.UserServiceImpl;
 import com.group5.constants.Constants;
 import com.group5.dao.impl.BookDAOImpl;
+import com.group5.dao.impl.LoanDAOImpl;
 import com.group5.dao.impl.UserDAOImpl;
 import com.group5.exception.BookNotFoundException;
+import com.group5.exception.DuplicateLoanIdException;
 import com.group5.exception.InvalidBookException;
 import com.group5.exception.InvalidUserException;
 import com.group5.exception.UserCancelException;
@@ -77,6 +81,7 @@ public class LibraryApplication {
 	public void start() {
 		
 		BookService bookService = new BookServiceImpl(new BookDAOImpl());
+		LoanService loanService = new LoanServiceImpl(new LoanDAOImpl());
 		
 		
         Scanner input = new Scanner(System.in);
@@ -150,14 +155,35 @@ public class LibraryApplication {
 	            	String bookId = input.nextLine();
 	            	
 	            	Book findBookId = bookService.findById(bookId);
-
+	            	
 	            	try {
+	            		
 	            		if (findBookId == null) {
+	            			logger.error("Invalid Book ID: {}", bookId);
 	            			throw new BookNotFoundException("Book ID not found.");
 	            		}
+	            		
 	            	} catch (BookNotFoundException e) {
 	            		System.out.println(e.getMessage());
+	            		break;
 	            	}
+	            	
+	            	System.out.println(Constants.strPROMPT_ENTER_LOANID);
+	            	String loanId = input.nextLine();
+	            	
+	            	try {
+	            		
+	            		String loan = loanService.findLoanId(loanId);
+	            		loanService.addLoanBook(loanId, String.valueOf(findBookId.getId()), String.valueOf(user.getId()));
+	            		
+	            	} catch (DuplicateLoanIdException e) {
+	            		logger.error("Duplicate Loan ID: {}", loanId);
+	            		System.out.println(e.getMessage());
+	            		break;
+	            	}
+	            	
+
+	            	
 	            	
 //	            	
 //	            	
